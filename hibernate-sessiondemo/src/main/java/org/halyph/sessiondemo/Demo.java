@@ -29,6 +29,8 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
  * Illustrates the use of Hibernate native APIs. The code here is unchanged from
@@ -41,8 +43,18 @@ public class Demo {
 
 	public static void main(String[] args) {
 		// configures settings from hibernate.cfg.xml
-		SessionFactory sessionFactory = new Configuration().configure()
-				.buildSessionFactory();
+		// Hibernate 3 style
+//		SessionFactory sessionFactory = new Configuration().configure()
+//				.buildSessionFactory();
+
+		// Hibernate 4 style
+		Configuration configuration = new Configuration();
+		configuration.configure();
+		ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(
+				configuration.getProperties()).buildServiceRegistry();
+		SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+		// ------------------------------
 
 		// create a couple of events...
 		Session session = sessionFactory.openSession();
